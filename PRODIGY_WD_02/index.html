@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stopwatch</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f1f1f1;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.5s;
+    }
+    .container {
+      margin-top: 50px;
+    }
+    .stopwatch {
+      font-size: 3em;
+      background-color: #333;
+      color: white;
+      border-radius: 5px;
+      padding: 10px 20px;
+      display: inline-block;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      animation: pulse 1s infinite alternate;
+    }
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(1.1);
+      }
+    }
+    .buttons {
+      margin-top: 20px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1em;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 0 5px;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .button-container {
+      display: flex;
+      justify-content: center;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    .button-container button:not(:last-child) {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="stopwatch">00:00:00</div>
+    <div class="buttons">
+      <button onclick="startStopwatch()">Start</button>
+      <button onclick="pauseStopwatch()">Pause</button>
+      <button onclick="resetStopwatch()">Reset</button>
+    </div>
+  </div>
+
+  <script>
+    let timer;
+    let minutes = 0;
+    let seconds = 0;
+    let milliseconds = 0;
+    let running = false;
+
+    function startStopwatch() {
+      if (!running) {
+        running = true;
+        timer = setInterval(updateStopwatch, 10);
+        document.body.style.backgroundColor = getRandomColor();
+      }
+    }
+
+    function pauseStopwatch() {
+      running = false;
+      clearInterval(timer);
+    }
+
+    function resetStopwatch() {
+      running = false;
+      clearInterval(timer);
+      minutes = 0;
+      seconds = 0;
+      milliseconds = 0;
+      updateDisplay();
+      document.body.style.backgroundColor = "#f1f1f1";
+    }
+
+    function updateStopwatch() {
+      milliseconds++;
+      if (milliseconds == 100) {
+        milliseconds = 0;
+        seconds++;
+      }
+      if (seconds == 60) {
+        seconds = 0;
+        minutes++;
+      }
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+      let formattedTime =
+        padTime(minutes) + ":" + padTime(seconds) + ":" + padTime(milliseconds);
+      document.querySelector(".stopwatch").textContent = formattedTime;
+    }
+
+    function padTime(time) {
+      return time < 10 ? "0" + time : time;
+    }
+
+    function getRandomColor() {
+      let letters = "0123456789ABCDEF";
+      let color = "#";
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+  </script>
+</body>
+</html>
